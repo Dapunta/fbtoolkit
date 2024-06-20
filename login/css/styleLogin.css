@@ -9,7 +9,7 @@ body {
 /* Full Size */
 
 .full-size {
-    background-image: url('../assets/background1.jpg');
+    background-image: url('../../assets/background1.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
