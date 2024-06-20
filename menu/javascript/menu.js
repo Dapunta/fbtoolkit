@@ -2,8 +2,9 @@
 
 const cookie = document.cookie;
 if (!cookie.includes('c_user')) {
-    try {window.location.href = currentUrl + "/login";}
-    catch {window.location.href = currentUrl + "/fbtoolkit/login";}
+    const currentUrl = window.location.origin;
+    if (currentUrl.includes('https')) {window.location.href = currentUrl + "/fbtoolkit/login";}
+    else {window.location.href = currentUrl + "/login";}
 }
 
 // Check Data
@@ -11,8 +12,8 @@ if (!cookie.includes('c_user')) {
 const data = localStorage.getItem("data");
 if (!data) {
     const currentUrl = window.location.origin;
-    try {window.location.href = currentUrl + "/login";}
-    catch {window.location.href = currentUrl + "/fbtoolkit/login";}
+    if (currentUrl.includes('https')) {window.location.href = currentUrl + "/fbtoolkit/login";}
+    else {window.location.href = currentUrl + "/login";}
 }
 
 // Display Data Account
@@ -112,6 +113,6 @@ function Logout() {
     localStorage.clear();
     localStorage.clear();
     const currentUrl = window.location.origin;
-    try {window.location.href = currentUrl + "/login";}
-    catch {window.location.href = currentUrl + "/fbtoolkit/login";}
+    if (currentUrl.includes('https')) {window.location.href = currentUrl + "/fbtoolkit/login";}
+    else {window.location.href = currentUrl + "/login";}
 }

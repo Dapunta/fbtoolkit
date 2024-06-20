@@ -40,8 +40,8 @@ async function setter(url) {
             localStorage.setItem("data", JSON.stringify(data));
             document.cookie = 'cookie=' + encodeURIComponent(data.cookie) + "; path=/";
             const currentUrl = window.location.origin;
-            try {window.location.href = currentUrl;}
-            catch {window.location.href = currentUrl + "/fbtoolkit";}
+            if (currentUrl.includes('https')) {window.location.href = currentUrl + "/fbtoolkit";}
+            else {window.location.href = currentUrl;}
         }
         else {
             errorLogin('Wrong credentials!');
