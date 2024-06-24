@@ -8,26 +8,34 @@ body {
 
 /* Keyframes */
 
-@keyframes slide-down {
-    0% {
-        transform: translateY(-50%) translateX(30%) scale(0);
-        opacity: 0
-    }
-    100% {
-        transform: translateY(0) translateX(0) scale(1);
-        opacity: 1
-    }
+@keyframes pop-in-profile {
+    0% {transform: translateY(-50%) translateX(30%) scale(0);}
+    100% {transform: translateY(0) translateX(0) scale(1);}
 }
 
-@keyframes slide-up {
-    0% {
-        height: 0%;
-        opacity: 0
-    }
-    100% {
-        height: 72%;
-        opacity: 1
-    }
+@keyframes pop-out-profile {
+    0% {transform: translateY(0) translateX(0) scale(1);}
+    100% {transform: translateY(-50%) translateX(30%) scale(0);}
+}
+
+@keyframes slide-up-1 {
+    0% {height: 0%;}
+    100% {height: 72%;}
+}
+
+@keyframes slide-down-1 {
+    0% {height: 72%;}
+    100% {height: 0%;}
+}
+
+@keyframes fade-in {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
+
+@keyframes fade-out {
+    0% {opacity: 1;}
+    100% {opacity: 0;}
 }
 
 @keyframes pop {
@@ -43,6 +51,16 @@ body {
         transform: scale(1);
         opacity: 1;
     }
+}
+
+@keyframes close-button {
+    0% {opacity: 1;}
+    100% {opacity: 0;}
+}
+
+@keyframes slide-layer-menu {
+    0% {left: 100vw;}
+    100% {left: 0;}
 }
 
 /* Full Size */
@@ -68,7 +86,14 @@ body {
     border: none;
     border-radius: 12px 12px 0 0;
     position: absolute;
-    animation: slide-up 0.8s ease-out forwards;
+}
+
+.background-layer-1.slide-up {
+    animation: slide-up-1 0.8s ease-out forwards, fade-in 0.8s ease-out forwards;
+}
+
+.background-layer-1.slide-down {
+    animation: slide-down-1 0.6s ease-out forwards, fade-out 0.6s ease-out forwards;
 }
 
 /* Navigation Bar */
@@ -225,7 +250,14 @@ body {
     box-shadow: 0 0 20px -10px black;
     overflow: hidden;
     z-index: 1;
-    animation: slide-down 0.4s ease-out forwards;
+}
+
+.profile-container.slide-down {
+    animation: pop-in-profile 0.4s ease-out forwards;
+}
+
+.profile-container.slide-up {
+    animation: pop-out-profile 0.6s ease-out forwards;
 }
 
 .picture-container {
@@ -305,6 +337,10 @@ body {
     grid-template-rows: 50% 50%;
 }
 
+.menu-container.close {
+    animation: close-button 0.6s ease-out forwards;
+}
+
 .grid-item {
     border: none;
     font-size: 30px;
@@ -359,6 +395,20 @@ body {
     text-shadow:
       0px 2px 3px rgba(255,255,255,0.5),
       0px -1px 1px rgba(0,0,0,0.6);
+}
+
+/* Open Menu */
+.layer-open-menu {
+    position: absolute;
+    background-color: #c6e6ff;
+    width: 100vw;
+    height: 100vh;
+    z-index: 3;
+    left: 100vw;
+}
+
+.layer-open-menu.close {
+    animation: slide-layer-menu 0.6s ease-in forwards;
 }
 
 /* Made With Love */

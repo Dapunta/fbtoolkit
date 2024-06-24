@@ -36,42 +36,50 @@ const listMenu = [
     {
         icon    : 'fa-solid fa-bolt',
         name    : 'Generate<br>Token',
-        url     : '',
+        id      : 'generate-token',
+        url     : '/generate_token',
         onclick : ''},
     {
         icon    : 'fa-solid fa-unlock',
         name    : 'Post Privacy<br>Changer',
-        url     : '',
+        id      : 'post-privacy',
+        url     : '/post_privacy',
         onclick : ''},
     {
         icon    : 'fa-solid fa-chart-line',
         name    : 'Interaction<br>Scanner',
-        url     : '',
+        id      : 'interaction-scanner',
+        url     : '/interaction_scanner',
         onclick : ''},
     {
         icon    : 'fa-solid fa-comments',
         name    : 'Auto<br>Chat',
-        url     : '',
+        id      : 'auto-chat',
+        url     : '/auto_chat',
         onclick : ''},
     {
         icon    : 'fa-solid fa-newspaper',
         name    : 'Auto<br>Post',
-        url     : '',
+        id      : 'auto-post',
+        url     : '/auto_post',
         onclick : ''},
     {
         icon    : 'fa-solid fa-face-laugh-squint',
         name    : 'Auto<br>Reaction',
-        url     : '',
+        id      : 'auto-reaction',
+        url     : '/auto_reaction',
         onclick : ''},
     {
         icon    : 'fa-solid fa-comment-dots',
         name    : 'Auto<br>Comment',
-        url     : '',
+        id      : 'auto-comment',
+        url     : '/auto_comment',
         onclick : ''},
     {
         icon    : 'fa-solid fa-share',
         name    : 'Auto<br>Share',
-        url     : '',
+        id      : 'auto-share',
+        url     : '/auto_share',
         onclick : ''},
 ];
 
@@ -85,7 +93,7 @@ async function displayMenu() {
         const newInner = document.createElement('div');
         newInner.classList.add('grid-item');
         newInner.innerHTML = `
-            <div class="button-menu-container">
+            <div id="${item.id}" class="button-menu-container menu" onclick="animationOpenMenu('${item.url}')">
                 <span><i class="inner-shadow ${item.icon}"></i></span>
                 <h4>${item.name}</h4>
             </div>`
@@ -115,4 +123,20 @@ function Logout() {
     const currentUrl = window.location.origin;
     if (currentUrl.includes('https')) {window.location.href = currentUrl + "/fbtoolkit/login";}
     else {window.location.href = currentUrl + "/login";}
+}
+
+function animationOpenMenu(url) {
+    const backLayers = document.getElementById('background-layer-1');
+    backLayers.classList.add('slide-down');
+    const profile = document.getElementById('profile-container');
+    profile.classList.add('slide-up');
+    const button = document.getElementById('menu-container');
+    button.classList.add('close');
+    const layer = document.getElementById('layer-open-menu');
+    layer.classList.add('close');
+    setTimeout(() => {
+        const currentUrl = window.location.origin;
+        if (currentUrl.includes('https')) {window.location.href = currentUrl + "/fbtoolkit" + url;}
+        else {window.location.href = currentUrl + url;}
+    }, 580);
 }
