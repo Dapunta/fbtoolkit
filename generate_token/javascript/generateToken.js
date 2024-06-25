@@ -1,45 +1,41 @@
 listToken = [
     {
-        name    : 'Token EAAU',
-        domain  : 'graph.facebook.com',
-        url     : '',
-        onclick : ''},
-    {
         name    : 'Token EAAG',
         domain  : 'business.facebook.com',
         url     : '',
-        onclick : ''},
+        onclick : 'eaag'},
     {
         name    : 'Token EAAB',
         domain  : 'adsmanager.facebook.com',
         url     : '',
-        onclick : ''},
+        onclick : 'eaab'},
     {
         name    : 'Token EAAD',
         domain  : 'facebook.com/events_manager2',
         url     : '',
-        onclick : ''},
+        onclick : 'eaad'},
     {
         name    : 'Token EAAC',
         domain  : 'facebook.com/brand_safety',
         url     : '',
-        onclick : ''},
+        onclick : 'eaac'},
     {
         name    : 'Token EAAF',
         domain  : 'facebook.com/test-and-learn',
         url     : '',
-        onclick : ''},
+        onclick : 'eaaf'},
     {
         name    : 'Token EABB',
         domain  : 'facebook.com/ads',
         url     : '',
-        onclick : ''},
-    {
-        name    : 'Token EAAT',
-        domain  : 'portal.facebook.com',
-        url     : '',
-        onclick : ''}
+        onclick : 'eabb'}
 ]
+
+function backToMainMenu() {
+    const currentUrl = window.location.origin;
+    if (currentUrl.includes('https')) {window.location.href = currentUrl + "/fbtoolkit";}
+    else {window.location.href = currentUrl;}
+}
 
 function showMenuToken() {
     const container = document.getElementById('button-container');
@@ -47,16 +43,17 @@ function showMenuToken() {
         setTimeout(() => {
             const newEl = document.createElement('div');
             newEl.classList.add('item-button');
+            newEl.id = `container-token-${element.onclick}`;
             const position = (index % 2 == 0) ? 'genap' : 'ganjil';
             const image = (index % 2 == 0) ? 'meta.png' : 'facebook.png';
             newEl.innerHTML = `
                 <div class="inside-item-button">
-                    <div class="sector-text-button ${position}">
+                    <div id="sector-text-${element.onclick}" class="sector-text-button ${position}">
                         <h1>${element.name}</h1>
                         <span>${element.domain}</span>
-                        <button class="fetch-button ${position}">Fetch</button>
+                        <button id="token-${element.onclick}" class="fetch-button ${position}" onclick="fetchToken('${element.onclick}')">Fetch</button>
                     </div>
-                    <div class="sector-gambar-button ${position}">
+                    <div id="logo-${element.onclick}" class="sector-gambar-button ${position}">
                         <img src="../assets/${image}"></img>
                     </div>
                 </div>`
@@ -66,3 +63,50 @@ function showMenuToken() {
 }
 
 showMenuToken();
+
+// Fetch Token
+
+function fetchToken(type) {
+
+    const response_token = 'LOREMIPSUMDOLORSITAMETCONSECTETURADIPISCINGELITSEDDOEIUSMODTEMPORINCIDIDUNTUTLABOREETDOLOREMAGNAALIQUAUTENIMADMINIMVENIAMQUISNOSTRUDEXERCITATIONULLAMCOLABORISNISIUTALIQUIPEXEACOMMODOCONSEQUATDUISAUTEIRUREDOLORINREPREHENDERITINVOLUPTATEVELITESSECILLUMDOLOREEUFUGIATNULLAPARIATUREXCEPTEURSINTOCCAECATCUPIDATATNONPROIDENTSUNTINCULPAQUIOFFICIADESERUNTMOLLITANIMIDESTLABORUM';
+
+    const gambar = document.getElementById(`logo-${type}`);
+    const geser  = (gambar.classList[1] == 'genap') ? 'slide-kiri' : 'slide-kanan';
+    const newPos = (gambar.classList[1] == 'genap') ? 'ganjil' : 'genap';
+    gambar.classList.add(geser);
+
+    const updateButton = document.getElementById(`sector-text-${type}`);
+    updateButton.innerHTML = ``;
+    updateButton.classList = ('sector-token-output');
+    updateButton.classList.add(newPos);
+    updateButton.innerHTML = `
+        <span id="text-token-${type}" class="output-token">${response_token}</span>
+        <button id="button-token-${type}" class="copy-button ${newPos}" onclick="copyToken('${type}')">
+            <span>Copy</span>
+            <i class="fa-solid fa-copy"></i>
+        </button>`;
+}
+
+// Copy Token
+
+function copyToken(type) {
+    const elementToken = 'text-token-' + type;
+    const elementButton = 'button-token-' + type;
+    var text = document.getElementById(elementToken);
+    if (text) {
+        var textarea = document.createElement("textarea");
+        textarea.textContent = text.textContent;
+        textarea.style.position = "fixed";
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand("copy");
+            const newButton = document.getElementById(elementButton);
+            newButton.innerHTML = `Copied`
+        }
+        catch (err) {
+            newButton.innerHTML = `Failed`
+        }
+        document.body.removeChild(textarea);
+    }
+}
