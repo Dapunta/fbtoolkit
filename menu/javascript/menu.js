@@ -1,3 +1,13 @@
+// Refresh Page
+
+(function () {
+    window.onpageshow = function(event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    };
+})();
+
 // Check Cookie
 
 const cookie = document.cookie;
