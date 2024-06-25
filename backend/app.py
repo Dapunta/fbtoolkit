@@ -2,7 +2,8 @@ import requests
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from facebook.login import LoginCookie, LoginEmail, TokenEAAG, TokenEAAB
+from facebook.login import LoginCookie, LoginEmail
+from facebook.generate_token import TokenEAAG, TokenEAAB, TokenEAAD, TokenEAAC, TokenEAAF, TokenEABB
 from facebook.post import GetPost, GetReactCount
 
 app = Flask(__name__)
@@ -80,21 +81,19 @@ def login():
 # Token
 @app.route(facebook_api + facebook_service[1])
 def token():
-    response  = {}
-    cookie    = request.args.get('cookie', None)
-    list_type = str(request.args.get('type', '')).split(',')
-    if list_type[0] == '': list_type = []
-    if cookie and len(list_type) != 0:
-        for i in list_type:
-            if i == 'eaag':
-                try: response.update({'token_{}'.format(i):TokenEAAG(requests.Session(), cookie)})
-                except Exception: response.update({'token_{}'.format(i):None})
-            elif i == 'eaab':
-                try: response.update({'token_{}'.format(i):TokenEAAB(requests.Session(), cookie)})
-                except Exception: response.update({'token_{}'.format(i):None})
-        if None not in list(response.values()): response.update({'status':'success'})
-        else: response.update({'status':'failed'})
-    else: response = {'status':'failed'}
+    parameter = {
+        'type'  : request.args.get('type', None),
+        'cookie': request.args.get('cookie', None)}
+    if parameter['type'] and parameter['cookie']:
+        x = parameter['type'].lower()
+        if   x == 'eaag': response = TokenEAAG(parameter['cookie'])
+        elif x == 'eaab': response = TokenEAAB(parameter['cookie'])
+        elif x == 'eaad': response = TokenEAAD(parameter['cookie'])
+        elif x == 'eaac': response = TokenEAAC(parameter['cookie'])
+        elif x == 'eaaf': response = TokenEAAF(parameter['cookie'])
+        elif x == 'eabb': response = TokenEABB(parameter['cookie'])
+        else: response = {'status':'failed', 'message':"invalid 'type' parameter"}
+    else: response = {'status':'failed', 'message':'invalid parameter, you forget {}'.format(', '.join(ForgetParam(parameter)))}
     return jsonify(response)
 
 # Post

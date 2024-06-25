@@ -51,7 +51,7 @@ function showMenuToken() {
                     <div id="sector-text-${element.onclick}" class="sector-text-button ${position}">
                         <h1>${element.name}</h1>
                         <span>${element.domain}</span>
-                        <button id="token-${element.onclick}" class="fetch-button ${position}" onclick="fetchToken('${element.onclick}')">Fetch</button>
+                        <button id="token-${element.onclick}" class="fetch-button color ${position}" onclick="fetchToken('${element.onclick}')">Fetch</button>
                     </div>
                     <div id="logo-${element.onclick}" class="sector-gambar-button ${position}">
                         <img src="../assets/${image}"></img>
@@ -66,25 +66,58 @@ showMenuToken();
 
 // Fetch Token
 
-function fetchToken(type) {
+function getCookie(name) {
+    let cookieArray = document.cookie.split(';');
+    let cookieName = name + "=";
+    for(let cookie of cookieArray) {
+        cookie = cookie.trim();
+        if (cookie.indexOf(cookieName) == 0) {
+            return decodeURIComponent(cookie.substring(cookieName.length, cookie.length));
+        }
+    }
+    return null;
+}
 
-    const response_token = 'LOREMIPSUMDOLORSITAMETCONSECTETURADIPISCINGELITSEDDOEIUSMODTEMPORINCIDIDUNTUTLABOREETDOLOREMAGNAALIQUAUTENIMADMINIMVENIAMQUISNOSTRUDEXERCITATIONULLAMCOLABORISNISIUTALIQUIPEXEACOMMODOCONSEQUATDUISAUTEIRUREDOLORINREPREHENDERITINVOLUPTATEVELITESSECILLUMDOLOREEUFUGIATNULLAPARIATUREXCEPTEURSINTOCCAECATCUPIDATATNONPROIDENTSUNTINCULPAQUIOFFICIADESERUNTMOLLITANIMIDESTLABORUM';
-
-    const gambar = document.getElementById(`logo-${type}`);
-    const geser  = (gambar.classList[1] == 'genap') ? 'slide-kiri' : 'slide-kanan';
-    const newPos = (gambar.classList[1] == 'genap') ? 'ganjil' : 'genap';
-    gambar.classList.add(geser);
-
-    const updateButton = document.getElementById(`sector-text-${type}`);
-    updateButton.innerHTML = ``;
-    updateButton.classList = ('sector-token-output');
-    updateButton.classList.add(newPos);
-    updateButton.innerHTML = `
-        <span id="text-token-${type}" class="output-token">${response_token}</span>
-        <button id="button-token-${type}" class="copy-button ${newPos}" onclick="copyToken('${type}')">
-            <span>Copy</span>
-            <i class="fa-solid fa-copy"></i>
-        </button>`;
+async function fetchToken(type) {
+    let data, result;
+    const cookie = getCookie('cookie');
+    const url = `https://dapuntaxd.pythonanywhere.com/facebook-api/token?type=${type}&cookie=${cookie}`;
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            }
+        });
+        data = await response.json();
+        if (data.status === 'success') {result = true}
+        else {result = false}}
+    catch (err) {result = false}
+    if (result) {
+        const response_token = data.token;
+        const gambar = document.getElementById(`logo-${type}`);
+        const geser  = (gambar.classList[1] == 'genap') ? 'slide-kiri' : 'slide-kanan';
+        const newPos = (gambar.classList[1] == 'genap') ? 'ganjil' : 'genap';
+        gambar.classList.add(geser);
+        const updateButton = document.getElementById(`sector-text-${type}`);
+        updateButton.innerHTML = ``;
+        updateButton.classList = ('sector-token-output');
+        updateButton.classList.add(newPos);
+        updateButton.innerHTML = `
+            <span id="text-token-${type}" class="output-token">${response_token}</span>
+            <button id="button-token-${type}" class="copy-button ${newPos}" onclick="copyToken('${type}')">
+                <span>Copy</span>
+                <i class="fa-solid fa-copy"></i>
+            </button>`;
+    }
+    else {
+        const updateButton = document.getElementById(`token-${type}`);
+        updateButton.innerText = 'Failed';
+        updateButton.classList.remove('color');
+        updateButton.classList.add('failed');
+    }
 }
 
 // Copy Token

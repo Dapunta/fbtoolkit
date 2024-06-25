@@ -238,10 +238,13 @@ body {
     width: 28%;
     font-size: 80%;
     font-weight: bold;
-    color: #518dee;
     top: 11vh;
     overflow: hidden;
     transition: all 0.15s ease
+}
+
+.fetch-button.color {
+    color: #518dee;
 }
 
 .fetch-button:hover {
@@ -256,6 +259,10 @@ body {
 
 .fetch-button.ganjil {
     right: 8%;
+}
+
+.fetch-button.failed {
+    color: red;
 }
 
 /* Output Token */
