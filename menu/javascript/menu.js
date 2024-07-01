@@ -53,7 +53,7 @@ const listMenu = [
         icon    : 'fa-solid fa-unlock',
         name    : 'Post Privacy<br>Changer',
         id      : 'post-privacy',
-        url     : '/post_privacy',
+        url     : '/privacy_changer',
         onclick : ''},
     {
         icon    : 'fa-solid fa-chart-line',

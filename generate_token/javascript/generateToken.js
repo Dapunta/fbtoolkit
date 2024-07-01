@@ -1,3 +1,21 @@
+// Check Cookie
+
+const cookie = document.cookie;
+if (!cookie.includes('c_user')) {
+    const currentUrl = window.location.origin;
+    if (currentUrl.includes('https')) {window.location.href = currentUrl + "/fbtoolkit/login";}
+    else {window.location.href = currentUrl + "/login";}
+}
+
+// Check Data
+
+const data = localStorage.getItem("data");
+if (!data) {
+    const currentUrl = window.location.origin;
+    if (currentUrl.includes('https')) {window.location.href = currentUrl + "/fbtoolkit/login";}
+    else {window.location.href = currentUrl + "/login";}
+}
+
 listToken = [
     {
         name    : 'Token EAAG',

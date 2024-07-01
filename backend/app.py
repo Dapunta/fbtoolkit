@@ -1,10 +1,8 @@
-import requests
-
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from facebook.login import LoginCookie, LoginEmail
 from facebook.generate_token import TokenEAAG, TokenEAAB, TokenEAAD, TokenEAAC, TokenEAAF, TokenEABB
-from facebook.post import GetPost, GetReactCount
+from facebook.post import GetPost, GetReactCount, privacyChanger
 
 app = Flask(__name__)
 CORS(app)
@@ -12,7 +10,7 @@ CORS(app)
 #--> Global Variable
 
 facebook_api = '/facebook-api'
-facebook_service = ['/login', '/token', '/post', '/react']
+facebook_service = ['/login', '/token', '/post', '/react', '/privacy']
 
 instagram_api = '/instagram-api'
 instagram_service = []
@@ -99,10 +97,11 @@ def token():
 # Post
 @app.route(facebook_api + facebook_service[2])
 def post():
-    cookie = request.args.get('cookie', None)
-    token  = request.args.get('token', None)
-    if cookie and token: response_data = GetPost(cookie, token)
-    else: response_data = {'status':'failed', 'count':0, 'data':[]}
+    parameter = {
+        'cookie': request.args.get('cookie', None),
+        'token' : request.args.get('token', None)}
+    if parameter['cookie'] and parameter['token']: response_data = GetPost(parameter['cookie'], parameter['token'])
+    else: response_data = {'status':'failed', 'message':'invalid parameter, you forget {}'.format(', '.join(ForgetParam(parameter)))}
     return jsonify(response_data)
 
 # React
@@ -113,6 +112,17 @@ def react():
         'cookie': request.args.get('cookie', None),
         'token' : request.args.get('token', None)}
     if parameter['post'] and parameter['cookie'] and parameter['token']: response_data = GetReactCount(parameter['cookie'], parameter['token'], parameter['post'])
+    else: response_data = {'status':'failed', 'message':'invalid parameter, you forget {}'.format(', '.join(ForgetParam(parameter)))}
+    return jsonify(response_data)
+
+# Privacy
+@app.route(facebook_api + facebook_service[4])
+def privacy():
+    parameter = {
+        'cookie': request.args.get('cookie', None),
+        'post'  : request.args.get('post', None),
+        'privacy' : request.args.get('privacy', None)}
+    if parameter['post'] and parameter['cookie'] and parameter['privacy']: response_data = privacyChanger(parameter['cookie'], parameter['post'], parameter['privacy'])
     else: response_data = {'status':'failed', 'message':'invalid parameter, you forget {}'.format(', '.join(ForgetParam(parameter)))}
     return jsonify(response_data)
 

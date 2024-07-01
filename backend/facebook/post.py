@@ -1,4 +1,5 @@
-import requests
+import requests, json, base64
+from facebook.tools import getData
 
 def GetPost(cookie:str, token:str) -> list:
     data = []
@@ -9,7 +10,9 @@ def GetPost(cookie:str, token:str) -> list:
             try: data.append({'id':i['id'], 'privacy':i['privacy']['value'], 'caption':i.get('message')})
             except Exception: continue
         return({'status':'success', 'count':len(data), 'data':data})
-    except Exception: return({'status':'failed', 'count':0, 'data':[]})
+    except Exception as e:
+        print(e)
+        return({'status':'failed', 'count':0, 'data':[]})
 
 def GetReactCount(cookie:str, token:str, id_post:str):
     response = {
@@ -40,14 +43,37 @@ def GetReactCount(cookie:str, token:str, id_post:str):
         response.update({'status' :'failed'})
         return(response)
 
-if __name__ == '__main__':
-    cookie     = 'sb=dO6kZZiKUA-GYCqlx7trixOV;ps_n=1;ps_l=1;wl_cbv=v2;client_version:2517;timestamp:1717090559;vpd=v1;640x360x2.0000000298023224;wd=945x1102;dpr=0.8999999761581421;locale=id_ID;datr=PWB5Zj5G4CgctduxqnD3XxJ7;c_user=61556949299760;xs=43:RqQzUqq0ayNgyQ:2:1719230542:-1:10888;fr=1ENV4sLjAk4O4F8is.AWV4UPgqjHKhP42Q_fcLcQqaHkk.BmcvHb..AAA.0.0.BmeWBR.AWVxV5m5qQ8;'
-    token_eaag = 'EAAGNO4a7r2wBO1xp8TWms5kYl816GdFUHLnJYtUO9XDaJSXPJvx7ai9banefqJzFe1N2ZATy5KA5Ms7CZCciOUzzeRC7GhCiCyJqXUMNYWWyA5MeGECJHiLP3RhQKdFXrXvXYsQdIYip0tMpOYYbeLl1H5T93BM3SAN7ZCxE4TUEmGFTEnSrQczRQZDZD'
-    token_eaab = 'EAABsbCS1iHgBOZBk7AIwi33chQX9pMB8SwQZB9YTrTPXZA9s10N2pKvLQEXp0js6cWXnZBVGVL2nwQG0M6rdrAG209yrZAZB3EijR1c5r2tg0ZCtvbGZAJZCFhZCuQi3KekAglQBae4y0zjiva10SAY80e6i5j04lVZBp88AVq8ZCGdTgKXWZBgUpTwryZBogvOwZDZD'
-
-    # post = GetPost(cookie, token_eaag) 
-    # print(post)
-
-    id_post = '61556949299760_122154413234231643'
-    react = GetReactCount(cookie, token_eaab, id_post)
-    print(react)
+def privacyChanger(cookie:str, post_id:str, privacy:str):
+    try:
+        r = requests.Session()
+        base_data = getData(r, cookie)
+        privacy = privacy.split('_')[-1].upper()
+        var = {
+            "input":{
+                "privacy_mutation_token":"null",
+                "privacy_row_input":{
+                    "allow":[],
+                    "base_state":privacy,
+                    "deny":[],
+                    "tag_expansion_state":"UNSPECIFIED"},
+                "privacy_write_id":base64.b64encode(('privacy_scope_renderer:{"id":%s}'%(post_id.split('_')[-1])).encode('utf-8')).decode('utf-8'),
+                "render_location":"COMET_STORY_MENU",
+                "actor_id":base_data["__user"],
+                "client_mutation_id":"1"},
+            "privacySelectorRenderLocation":"COMET_STORY_MENU",
+            "scale":"1",
+            "storyRenderLocation":"timeline",
+            "tags":"null",
+            "__relay_internal__pv__CometUFIShareActionMigrationrelayprovider":"true"}
+        data = {
+            **base_data,
+            'fb_api_caller_class':'RelayModern',
+            'fb_api_req_friendly_name':'CometPrivacySelectorSavePrivacyMutation',
+            'variables':json.dumps(var),
+            'server_timestamps':'true',
+            'doc_id':'26411441695122178'}
+        pos = r.post('https://web.facebook.com/api/graphql/', data=data, cookies={'cookie':cookie}).json()
+        x = pos['data']['privacy_selector_save']['privacy_scope']['privacy_scope_renderer']['privacy_row_input']['base_state']
+        if x == privacy: return({'status':'success','privacy':x})
+        else: return({'status':'failed','privacy':x})
+    except Exception: return({'status':'failed','privacy':'unknown'})

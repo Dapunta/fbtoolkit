@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/privacyChanger.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <title>FBToolkit | Privacy Changer</title>
+</head>
+<body>
+    
+    <div class="full-size">
+        <div class="navigation-container">
+            <div class="back-button-container">
+                <i class="fa-solid fa-chevron-left" onclick="backToMainMenu()"></i>
+            </div>
+            <div class="navigasi-kanan-container">
+                <h1>FBToolkit</h1>
+                <span>Privacy Changer</span>
+            </div>
+        </div>
+        <div class="full-container">
+            <form id="form-section" class="form-section">
+                <span>Change Post Privacy<br>In One Click</span>
+                <div class="choice-container">
+                    <select name="from" id="privacy-from">
+                        <option value="all">All</option>
+                        <option value="public">Public</option>
+                        <option value="friend">Friend</option>
+                        <option value="private">Private</option>
+                    </select>
+                    <span>to</span>
+                    <select name="to" id="privacy-to">
+                        <option value="private">Private</option>
+                        <option value="public">Public</option>
+                        <option value="friend">Friend</option>
+                    </select>
+                </div>
+                <button class="button-privacy" type="submit">Change</button>
+            </form>
+            <div id="post-section" class="post-section"></div>
+        </div>
+    </div>
+    <script src="javascript/privacyChanger.js"></script>
+</body>
+</html>
