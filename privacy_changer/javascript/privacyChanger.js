@@ -77,11 +77,14 @@ async function fetchPost(from, to) {
     for (const item of list_post.data) {
         
         let new_privacy;
+        let success = false;
         if (item.privacy == convertPrivacy(to)) {
             new_privacy = convertPrivacy(item.privacy);
         }
         else {
-            const success = await changePrivacy(cookie, item.id, convertPrivacy(to));
+            if (from == 'all' || item.privacy == convertPrivacy(from)) {
+                success = await changePrivacy(cookie, item.id, convertPrivacy(to));
+            }
             if (success) new_privacy = to.charAt(0).toUpperCase() + to.slice(1);
             else new_privacy = convertPrivacy(item.privacy);
         }
